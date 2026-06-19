@@ -81,6 +81,18 @@ def test_card_crud_within_a_deck():
     assert client.get(f"/decks/{deck['id']}/cards").json() == []
 
 
+def test_deleting_a_deck_cascades_to_its_cards():
+    deck = client.post("/decks", json={"name": "Cascade"}).json()
+    card_a = client.post(f"/decks/{deck['id']}/cards", json={"front": "a", "back": "1"}).json()
+    card_b = client.post(f"/decks/{deck['id']}/cards", json={"front": "b", "back": "2"}).json()
+
+    assert client.delete(f"/decks/{deck['id']}").status_code == 204
+
+    # The cards are gone too, not just orphaned -- deleting them again 404s.
+    assert client.delete(f"/cards/{card_a['id']}").status_code == 404
+    assert client.delete(f"/cards/{card_b['id']}").status_code == 404
+
+
 def test_cards_require_an_existing_deck():
     resp = client.post("/decks/9999/cards", json={"front": "x", "back": "y"})
     assert resp.status_code == 404
@@ -89,6 +101,7 @@ def test_cards_require_an_existing_deck():
 def test_review_flow_advances_the_schedule():
     deck = client.post("/decks", json={"name": "History"}).json()
     card = client.post(f"/decks/{deck['id']}/cards", json={"front": "1492", "back": "Columbus"}).json()
+    assert card["last_reviewed_at"] is None
 
     # A freshly created card is due today.
     next_up = client.get(f"/review/{deck['id']}/next")
@@ -100,6 +113,7 @@ def test_review_flow_advances_the_schedule():
     reviewed = resp.json()
     assert reviewed["repetitions"] == 1
     assert reviewed["interval"] == 1
+    assert reviewed["last_reviewed_at"] is not None
     assert reviewed["due_date"] != card["due_date"] or reviewed["interval"] > 0
 
     # Now scheduled a day out, so it's no longer the next card due today.

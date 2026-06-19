@@ -50,14 +50,14 @@ curl -s -X POST http://127.0.0.1:8000/decks -H 'Content-Type: application/json' 
 
 curl -s -X POST http://127.0.0.1:8000/decks/1/cards -H 'Content-Type: application/json' \
   -d '{"front": "perro", "back": "dog"}'
-# {"id":1,"deck_id":1,"front":"perro","back":"dog","ease":2.5,"interval":0,"repetitions":0,"due_date":"2026-06-19"}
+# {"id":1,"deck_id":1,"front":"perro","back":"dog","ease":2.5,"interval":0,"repetitions":0,"due_date":"2026-06-19","last_reviewed_at":null}
 
 curl -s http://127.0.0.1:8000/review/1/next
 # the same card -- it's due today, since every new card starts out due
 
 curl -s -X POST http://127.0.0.1:8000/review/1 -H 'Content-Type: application/json' \
   -d '{"quality": 5}'
-# {"id":1, ..., "interval":1, "repetitions":1, "due_date":"2026-06-20"}
+# {"id":1, ..., "interval":1, "repetitions":1, "due_date":"2026-06-20", "last_reviewed_at":"2026-06-19T09:05:10.827939"}
 ```
 
 ## API overview

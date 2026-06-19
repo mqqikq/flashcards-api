@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -30,6 +30,7 @@ class CardOut(BaseModel):
     interval: int
     repetitions: int
     due_date: date
+    last_reviewed_at: datetime | None = None
 
 
 class ReviewIn(BaseModel):

@@ -3,6 +3,8 @@ from datetime import date, datetime
 from sqlalchemy import Date, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from .utils import today_utc
+
 
 class Base(DeclarativeBase):
     pass
@@ -31,7 +33,7 @@ class Card(Base):
     ease: Mapped[float] = mapped_column(Float, default=2.5)
     interval: Mapped[int] = mapped_column(Integer, default=0)
     repetitions: Mapped[int] = mapped_column(Integer, default=0)
-    due_date: Mapped[date] = mapped_column(Date, default=date.today)
+    due_date: Mapped[date] = mapped_column(Date, default=today_utc)
     last_reviewed_at: Mapped[datetime | None] = mapped_column(DateTime, default=None)
 
     deck: Mapped["Deck"] = relationship(back_populates="cards")

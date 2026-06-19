@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..database import get_db
 from ..scheduler import schedule_review
+from ..utils import today_utc
 from .cards import get_card_or_404
 from .decks import get_deck_or_404
 
@@ -17,7 +18,7 @@ def next_card(deck_id: int, db: Session = Depends(get_db)) -> models.Card:
     get_deck_or_404(deck_id, db)
     card = (
         db.query(models.Card)
-        .filter(models.Card.deck_id == deck_id, models.Card.due_date <= date.today())
+        .filter(models.Card.deck_id == deck_id, models.Card.due_date <= today_utc())
         .order_by(models.Card.due_date)
         .first()
     )

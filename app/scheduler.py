@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from datetime import date, timedelta
 
+from .utils import today_utc
+
 DEFAULT_EASE = 2.5
 MIN_EASE = 1.3
 
@@ -32,7 +34,7 @@ def schedule_review(
     """
     if not 0 <= quality <= 5:
         raise ValueError(f"quality must be between 0 and 5, got {quality}")
-    today = today if today is not None else date.today()
+    today = today if today is not None else today_utc()
 
     if quality < 3:
         repetitions = 0

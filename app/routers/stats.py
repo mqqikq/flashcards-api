@@ -1,18 +1,17 @@
-from datetime import date
-
 from fastapi import APIRouter, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_db
+from ..utils import today_utc
 
 router = APIRouter(tags=["stats"])
 
 
 @router.get("/stats", response_model=schemas.StatsOut)
 def get_stats(db: Session = Depends(get_db)) -> schemas.StatsOut:
-    today = date.today()
+    today = today_utc()
     total_decks = db.query(func.count(models.Deck.id)).scalar() or 0
     total_cards = db.query(func.count(models.Card.id)).scalar() or 0
     cards_due_today = (

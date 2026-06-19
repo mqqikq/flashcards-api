@@ -128,12 +128,11 @@ database that's recreated before every test for isolation.
 | `app/routers/review.py` | `/review/*` — the scheduling endpoints |
 | `app/routers/stats.py` | `/stats` aggregate counts |
 
-## Roadmap
+## Possible extensions
 
-- [x] CRUD for decks and cards, SQLite persistence, `/docs`
-- [x] SM-2-lite review scheduling
-- [x] `/stats` (due today, reviewed today)
-- [ ] Stretch: tags/search, simple API-key auth, small HTML front end, deploy
+Not needed for the project to be complete, just ideas if it grows further:
+tags/search, simple API-key auth, a small HTML front end, a hosted demo
+deploy.
 
 ## License
 
